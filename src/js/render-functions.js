@@ -1,35 +1,21 @@
-'use strict';
-
+// Описаний у документації
 import SimpleLightbox from "simplelightbox";
+// Додатковий імпорт стилів
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-export function creatMarkupImages(images) {
-    const gallery = document.querySelector('.js-gallery');
-    const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => `
-        <a href="${largeImageURL}" class="gallery__link">
-            <div class="photo-card">
-                <img src="${webformatURL}" alt="${tags}"/>
-                <div class="info">
-                    <p class="text-photo"><strong>Likes:</strong> ${likes}</p>
-                    <p class="text-photo"><strong>Views:</strong> ${views}</p>
-                    <p class="text-photo"><strong>Comments:</strong> ${comments}</p>
-                    <p class="text-photo"><strong>Downloads:</strong> ${downloads}</p>
-                </div>
-            </div>
-        </a>
-    `).join('');
-
-    gallery.innerHTML = markup;
-
-    const lightbox = new SimpleLightbox('.gallery a', {
+export function createImages(data) {
+    const lightbox = new SimpleLightbox('.gallery-list a', { 
+        captions: true,
         captionsData: 'alt',
-        captionDelay: 250,
-        overlayOpacity: 0.9,
-    });
+        captionDelay: 250
+     });
+    const list = document.querySelector(".gallery-list");
+    let images =  data.hits.map((hit) => `<div class="image-frame"><a href="${hit.largeImageURL}"><img class="image" src="${hit.webformatURL}" alt="${hit.tags}" /></a><div class ="text-wraper"><div class="text-block"><h5>likes</h5><p>${hit.likes}</p></div><div class="text-block"><h5>views</h5><p>${hit.views}</p></div><div class="text-block"><h5>comments</h5><p>${hit.comments}</p></div><div class="text-block"><h5>downloads</h5><p>${hit.downloads}</p></div></div></div>`).join("");
+    list.insertAdjacentHTML("afterbegin", images);
     lightbox.refresh();
 }
 
-export function clearGallery() {
-    const gallery = document.querySelector('.gallery');
-    gallery.innerHTML = '';
+export function clearImages() {
+    const list = document.querySelector(".gallery-list");
+    list.innerHTML = "";
 }
